@@ -78,7 +78,7 @@
                 qrScanner = new Html5Qrcode("reader");
                 qrScanner.start(
                     { facingMode: "environment" }, // Prefer back camera
-                    { fps: 30, qrbox: 200 },
+                    { fps: 10, qrbox: 300 },// 2nd commit 
                     onScanSuccess,
                     onScanFailure
                 ).catch(err => console.error("Camera access error:", err));
