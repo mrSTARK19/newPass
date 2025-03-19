@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Details - ePass</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            text-align: center;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #004792;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #004792;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #003366;
+        }
+
+        .delete-btn {
+            width: 50%;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: red;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Enter Pass Details</h2>
+        <input type="text" id="name" placeholder="Full Name" required>
+        <select id="gender">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        <input type="text" id="route" placeholder="Route Details" required>
+        <input type="file" id="profilePhoto" accept="image/*">
+        <button id="submitBtn" onclick="submitForm()">Submit</button>
+
+
+    </div>
+    <button class="delete-btn" onclick="deleteData()">Delete Data</button>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const submitButton = document.getElementById("submitBtn");
+
+            // Check if a pass is already stored in localStorage
+            if (localStorage.getItem("userData")) {
+                submitButton.disabled = true;
+                submitButton.style.background = "#ccc"; // Change color to indicate disabled
+                submitButton.style.cursor = "not-allowed";
+                alert("Pass already exists! Delete it before submitting a new one.");
+            }
+        });
+
+
+
+
+
+        function submitForm() {
+            const name = document.getElementById('name').value;
+            const gender = document.getElementById('gender').value;
+            const route = document.getElementById('route').value;
+            const file = document.getElementById('profilePhoto').files[0];
+
+            if (name && gender && route) {
+                // Store data temporarily
+                localStorage.setItem('tempName', name);
+                localStorage.setItem('tempGender', gender);
+                localStorage.setItem('tempRoute', route);
+
+                // Handle profile image upload
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        localStorage.setItem('tempProfile', e.target.result);
+                        window.location.href = 'verify.html'; // Redirect after image is loaded
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    window.location.href = 'verify.html'; // Redirect if no image
+                }
+            } else {
+                alert('Please fill all fields!');
+            }
+        }
+
+        function deleteData() {
+            localStorage.removeItem('userData');
+            localStorage.removeItem('profileImage');
+            localStorage.removeItem('checkinColor');
+            localStorage.removeItem('checkinCount');
+            localStorage.removeItem('lastCheckinTime');
+            alert('Pass data deleted!');
+            location.reload();
+        }
+
+    </script>
+</body>
+
+</html>

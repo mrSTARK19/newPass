@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login Container */
+.login-container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+/* Input Fields */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Login Button */
+.login-btn {
+    background: #007bff;
+    color: white;
+    transition: 0.3s;
+}
+
+.login-btn:hover {
+    background: #0056b3;
+}
+
+/* Google Login Button */
+.google-btn {
+    background: #db4437;
+    color: white;
+    transition: 0.3s;
+}
+
+.google-btn:hover {
+    background: #b33624;
+}
+
+/* Links */
+p {
+    margin-top: 15px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="login()">Login</button>
+        <button onclick="googleLogin()">Login with Google</button>
+        <p><a href="register.html">Register</a> | <a href="#" onclick="recoverPassword()">Forgot Password?</a></p>
+    </div>
+
+    <script src="firebase-config.js" type="module"></script>
+
+<script type="module" src="script.js"></script>
+
+</body>
+</html>

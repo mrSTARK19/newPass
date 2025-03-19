@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ePass - Digital Bus Pass</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            text-align: center;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #004792;
+            color: white;
+        }
+
+        .nav-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-icons i {
+            cursor: pointer;
+            font-size: 28px;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .checkin-box {
+            width: auto;
+            height: 100px;
+            background-color: #808080;
+            margin: 20px auto;
+            border-radius: 15px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .show-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #004792;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .pass-container {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav">
+        <span class="nav-title">ePass</span>
+        <div class="nav-icons">
+            
+            <i class="material-icons scanner-icon" onclick="location.href='scanner.html'">qr_code_scanner</i>
+            <i class="material-icons" onclick="location.href='maps.html'">map</i>
+
+            <i class="material-icons" onclick="location.href='form.html'">person</i>
+            <i class="material-icons" onclick="location.href='apply.html'">apps</i>
+            <i class="material-icons" onclick="location.href='policy.html'">policy</i>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="pass-container" id="passContainer">
+            <div class="checkin-box" id="checkinBox" >Check-In</div>
+            <img id="profileImage" class="profile-img" src="assets/default-profile.jpg">
+            <div id="passData"></div>
+        </div>
+        <button class="show-btn" onclick="showPass()">Show Pass</button>
+    </div>
+
+    <script>
+
+window.onload = function() {
+    resetDailyCheckin(); // Reset check-in data if it's a new day
+    if (localStorage.getItem("scanStatus") === "true") {
+ 
+        changeColor();
+        localStorage.setItem("scanStatus", "false"); // Reset after execution
+    }
+};
+
+
+function resetDailyCheckin() {
+    let today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    let lastCheckinDate = localStorage.getItem("lastCheckinDate");
+
+    if (lastCheckinDate !== today) {
+        // Reset check-in related data
+        localStorage.setItem("checkinColor", "#808080"); // Set to Grey
+        localStorage.setItem("checkinCount", "0");
+        localStorage.setItem("lastCheckinTime", "0");
+
+        // Update last check-in date to today
+        localStorage.setItem("lastCheckinDate", today);
+    }
+}
+
+function changeColor() {
+    let checkinBox = document.getElementById('checkinBox');
+    if (!checkinBox) {
+        console.error("Check-in box not found!");
+        return;
+    }}
+        let checkinColor = localStorage.getItem('checkinColor') || '#808080';
+        let checkinCount = parseInt(localStorage.getItem('checkinCount')) || 0;
+        let lastCheckinTime = parseInt(localStorage.getItem('lastCheckinTime')) || 0;
+        document.getElementById('checkinBox').style.backgroundColor = checkinColor;
+
+        function changeColor() {
+            const colors = ['#808080', '#4CAF50', '#f44336']; // Grey → Green → Red
+            const currentTime = Date.now();
+
+            if (checkinCount >= 2) {
+                alert("Daily limit reached. You can check in only twice per day.");
+                return;
+            }
+
+            const currentIndex = colors.indexOf(checkinColor);
+            let newIndex = currentIndex;
+
+            if (checkinColor === '#4CAF50') { // Currently Green
+                if (currentTime - lastCheckinTime < 120000) {
+                    alert("Wait for 2 minutes before checking in again.");
+                    return;
+                } else {
+                    newIndex = 2; // Move to Red after 2 minutes
+                }
+            } else { // Grey or Red
+                newIndex = (currentIndex + 1) % colors.length; // Grey → Green immediately
+            }
+
+            // Update only if color changes
+            if (newIndex !== currentIndex) {
+                checkinColor = colors[newIndex];
+                document.getElementById('checkinBox').style.backgroundColor = checkinColor;
+                localStorage.setItem('checkinColor', checkinColor);
+
+                checkinCount++;
+                localStorage.setItem('checkinCount', checkinCount);
+
+                // Update lastCheckinTime only when transitioning to Green
+                if (checkinColor === '#4CAF50') {
+                    lastCheckinTime = currentTime;
+                    localStorage.setItem('lastCheckinTime', lastCheckinTime);
+                }
+            }
+           // localStorage.setItem("scanStatus","false");
+        }
+
+
+
+        function showPass() {
+            const passData = JSON.parse(localStorage.getItem('userData') || '{}');
+            if (passData.name) {
+                document.getElementById('passData').innerHTML = `
+                    <p><strong>Name:</strong> ${passData.name}</p>
+                    <p><strong>Path:</strong> ${passData.route}</p>
+                    <p><strong>Gender:</strong> ${passData.gender}</p>
+                    <p><strong>Last Date:</strong> ${passData.expiryDate}</p>
+                `;
+                document.getElementById('profileImage').src =
+                    localStorage.getItem('profileImage') || 'assets/default-profile.jpg';
+                document.getElementById('passContainer').style.display = 'block';
+                document.getElementById('checkinBox').style.display = 'flex';
+            } else {
+                alert("No pass found! Please enter details first.");
+            }
+        }
+    </script>
+</body>
+
+</html>

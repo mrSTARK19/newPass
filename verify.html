@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify - ePass</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            text-align: center;
+        }
+        .verify-container {
+            background: white;
+            padding: 20px;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #004792;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #004792;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #003366;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <h2>Admin Verification</h2>
+        <input type="password" id="password" placeholder="Enter Admin Password">
+        <button onclick="verifyAndSave()">Verify</button>
+    </div>
+
+    <script>
+function verifyAndSave() {
+    const correctPassword = "1234"; // Default password
+    const enteredPassword = document.getElementById('password').value;
+
+    if (enteredPassword === correctPassword) {
+        // Retrieve temp data
+        const name = localStorage.getItem('tempName');
+        const gender = localStorage.getItem('tempGender');
+        const route = localStorage.getItem('tempRoute');
+        const profile = localStorage.getItem('tempProfile');
+
+        if (!name || !gender || !route) {
+            alert("Error: Missing data! Please enter details again.");
+            return;
+        }
+
+        // Calculate expiry date (30 days from now)
+        const today = new Date();
+        const expiryDate = new Date(today.setDate(today.getDate() + 30)).toDateString();
+
+        // Save final data
+        const userData = { name, gender, route, expiryDate };
+        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('profileImage', profile);
+
+        // Clear temporary data
+        localStorage.removeItem('tempName');
+        localStorage.removeItem('tempGender');
+        localStorage.removeItem('tempRoute');
+        localStorage.removeItem('tempProfile');
+
+        alert("Pass Verified and Saved!");
+        window.location.href = 'homepage.html'; // Redirect to main page
+    } else {
+        alert('Incorrect password!');
+    }
+}
+
+    </script>
+</body>
+</html>

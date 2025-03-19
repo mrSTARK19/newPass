@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Bus Pass - ePass</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f8f8;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 26px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+        .location-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .location-item {
+            font-size: 18px;
+            background: #0072A0;
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .location-item:hover {
+            background: #005f80;
+        }
+        .apply-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: #004792;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .apply-btn:hover {
+            background: #003366;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Apply for Bus Pass</h1>
+        <ul class="location-list">
+            <li class="location-item" onclick="openGoogleForm()">Kolhapur</li>
+            <li class="location-item">Sambhajinagar</li>
+            <li class="location-item">Rankala</li>
+            <li class="location-item">Ichalkaranji</li>
+            <li class="location-item">Panhala</li>
+            <li class="location-item">Hatkanangle</li>
+            <li class="location-item">Gaganbavda</li>
+            <li class="location-item">Radhanagari</li>
+            <li class="location-item">Kagal</li>
+            <li class="location-item">Ajra</li>
+            <li class="location-item">Gadhinglaj</li>
+            <li class="location-item">Chandgad</li>
+            <li class="location-item">Kodoli</li>
+            <li class="location-item">Vathar</li>
+        </ul>
+        <a href="https://forms.gle/fnTYqQ4ibGPXNkcW7" class="apply-btn" target="_blank">Apply Now</a>
+    </div>
+
+    <script>
+        function openGoogleForm() {
+            window.open('https://forms.gle/fnTYqQ4ibGPXNkcW7', '_blank');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Bus Location</title>
+
+    <!-- ✅ Load Google Maps API Properly (with async and defer) -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7s5Pjjb0ctIs8oTSxRfQJRht-O6jLuE0&callback=initMap"></script>
+
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Live Bus Tracking</h2>
+    <div id="map"></div>
+
+    <!-- ✅ Fix: Use regular script (not module) to expose initMap globally -->
+    <script>
+        let map, marker;
+        const driverID = "driver_123"; // Unique driver ID
+
+        // ✅ Initialize Google Map
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 16.5827, lng: 74.3361 }, // Default location
+                zoom: 15,
+            });
+
+            // ✅ Import Firebase dynamically to avoid module issues
+            import("./firebase-config.js").then(({ database, ref, onValue }) => {
+                const driverRef = ref(database, "drivers/" + driverID);
+                onValue(driverRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        const pos = { lat: data.latitude, lng: data.longitude };
+
+                        // ✅ Update marker on map
+                        if (!marker) {
+                            marker = new google.maps.Marker({
+                                position: pos,
+                                map: map,
+                                title: "Bus Location"
+                            });
+                        } else {
+                            marker.setPosition(pos);
+                        }
+                        map.setCenter(pos);
+                    }
+                });
+            }).catch(error => console.error("Firebase Import Error:", error));
+        }
+
+        // ✅ Expose initMap globally (fixes the issue)
+        window.initMap = initMap;
+    </script>
+
+</body>
+</html>
