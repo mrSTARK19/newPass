@@ -86,6 +86,10 @@
         }
 
         function onScanSuccess(decodedText, decodedResult) {
+             let scannedText = decodedText.trim().toLowerCase();
+            let expectedText = text.toLowerCase();
+            console.log("Scanned text:", scannedText); // Debugging output
+            
             document.getElementById("result").innerHTML = "Verified !";
             document.getElementById("result").style.color = "green";
            if (decodedText===text){
