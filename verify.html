@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
             background: #f4f4f4;
             text-align: center;
         }
+
         .verify-container {
             background: white;
             padding: 20px;
@@ -22,11 +24,14 @@
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             margin-bottom: 20px;
             color: #004792;
         }
-        input, button {
+
+        input,
+        button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -34,6 +39,7 @@
             border-radius: 5px;
             font-size: 16px;
         }
+
         button {
             background: #004792;
             color: white;
@@ -41,58 +47,124 @@
             border: none;
             cursor: pointer;
         }
+
         button:hover {
             background: #003366;
         }
     </style>
 </head>
+
 <body>
     <div class="verify-container">
         <h2>Admin Verification</h2>
         <input type="password" id="password" placeholder="Enter Admin Password">
-        <button onclick="verifyAndSave()">Verify</button>
-        <a href="https://payments.cashfree.com/forms/myinfo"><button >Pay</button></a>
+        <input type="text" id="eamount" placeholder="Enter Amount...">
+        <button onclick="check()">Set Amount</button>
+        <button onclick="link()">Generate Link</button>
+
     </div>
+    <div id="result" style="margin-top: 20px;"></div>
+
 
     <script>
-function verifyAndSave() {
-    const correctPassword = "1234"; // Default password
-    const enteredPassword = document.getElementById('password').value;
+        window.onload = function () {
+            // You can check query params for payment status if needed
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status'); // if Cashfree adds one
 
-    if (enteredPassword === correctPassword) {
-        // Retrieve temp data
-        const name = localStorage.getItem('tempName');
-        const gender = localStorage.getItem('tempGender');
-        const route = localStorage.getItem('tempRoute');
-        const profile = localStorage.getItem('tempProfile');
+            // Run your custom function here
+            if (status === "SUCCESS") {
+                verifyAndSave()
+            }
+        };
 
-        if (!name || !gender || !route) {
-            alert("Error: Missing data! Please enter details again.");
-            return;
+        const correctPassword = "1234"; // Default password
+        const enteredPassword = document.getElementById('password').value;
+
+        function check() {
+            const enteredPassword = document.getElementById('password').value;
+            const eamount = document.getElementById('eamount').value;
+
+            if (enteredPassword === correctPassword) {
+                localStorage.setItem("amount", eamount);
+                console.log("amount:", eamount);
+                alert("Amount set successfully!");
+            } else {
+                alert("Incorrect password!");
+            }
         }
 
-        // Calculate expiry date (30 days from now)
-        const today = new Date();
-        const expiryDate = new Date(today.setDate(today.getDate() + 30)).toDateString();
 
-        // Save final data
-        const userData = { name, gender, route, expiryDate };
-        localStorage.setItem('userData', JSON.stringify(userData));
-        localStorage.setItem('profileImage', profile);
+        function link() {
+            const amount = localStorage.getItem('amount') || document.getElementById('amount')?.value;
 
-        // Clear temporary data
-        localStorage.removeItem('tempName');
-        localStorage.removeItem('tempGender');
-        localStorage.removeItem('tempRoute');
-        localStorage.removeItem('tempProfile');
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
 
-        alert("Pass Verified and Saved!");
-        window.location.href = 'homepage.html'; // Redirect to main page
-    } else {
-        alert('Incorrect password!');
-    }
-}
+            fetch('https://flaskserver-3c3s.onrender.com/create-payment-link', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const resultDiv = document.getElementById('result');
+                    if (data.link_url) {
+                        resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
+                    } else {
+                        resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error || 'Something went wrong'}</p>`;
+                    }
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    document.getElementById('result').innerHTML = `<p style="color:red;">❌ Error generating link</p>`;
+                });
+        }
+
+
+        function verifyAndSave() {
+            const correctPassword = "1234"; // Default password
+            const enteredPassword = document.getElementById('password').value;
+
+            //   if (enteredPassword === correctPassword) {
+            // Retrieve temp data
+            const name = localStorage.getItem('tempName');
+            const gender = localStorage.getItem('tempGender');
+            const route = localStorage.getItem('tempRoute');
+            const profile = localStorage.getItem('tempProfile');
+
+            if (!name || !gender || !route) {
+                alert("Error: Missing data! Please enter details again.");
+                return;
+            }
+
+            // Calculate expiry date (30 days from now)
+            const today = new Date();
+            const expiryDate = new Date(today.setDate(today.getDate() + 30)).toDateString();
+
+            // Save final data
+            const userData = { name, gender, route, expiryDate };
+            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('profileImage', profile);
+
+            // Clear temporary data
+            localStorage.removeItem('tempName');
+            localStorage.removeItem('tempGender');
+            localStorage.removeItem('tempRoute');
+            localStorage.removeItem('tempProfile');
+
+            alert("Pass Verified and Saved!");
+            window.location.href = 'homepage.html'; // Redirect to main page
+            //    } else {
+            //  alert('Incorrect password!');
+            //   }
+        }
 
     </script>
 </body>
+
 </html>
