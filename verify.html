@@ -77,7 +77,7 @@
                 verifyAndSave()
             }
         };
-
+        let currentLinkId = null;
         const correctPassword = "1234"; // Default password
         const enteredPassword = document.getElementById('password').value;
 
@@ -92,6 +92,23 @@
             } else {
                 alert("Incorrect password!");
             }
+        }
+
+            function startPollingForPayment(linkId) {
+            const interval = setInterval(() => {
+                fetch(`https://flaskserver-3c3s.onrender.com/check-payment/${linkId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            clearInterval(interval); // ✅ stop polling
+                            document.getElementById('result').innerHTML += "<p style='color:green;'>✅ Payment Confirmed!</p>";
+                            verifyAndSave(); // 🟢 Call this automatically
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Polling error:", err);
+                    });
+            }, 5000); // every 5 seconds
         }
 
 
@@ -114,7 +131,9 @@
                 .then(data => {
                     const resultDiv = document.getElementById('result');
                     if (data.link_url) {
+                        currentLinkId = data.link_id;
                         resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
+                        startPollingForPayment(currentLinkId);
                     } else {
                         resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error || 'Something went wrong'}</p>`;
                     }
