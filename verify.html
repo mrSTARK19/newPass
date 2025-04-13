@@ -113,7 +113,7 @@
 */
 
         function link() {
-            const amount = localStorage.getItem('amount') || document.getElementById('amount')?.value;
+            const amount = localStorage.getItem('amount') ;
 
             if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
                 alert("Please enter a valid amount.");
