@@ -160,7 +160,10 @@ function verifyAndSave() {
                 fetch(`https://flaskserver-3c3s.onrender.com/check-payment/${linkId}`)
                     .then(res => res.json())
                     .then(data => {
+                        console.log("Polling response data:", data);
+
                         if (data.status === "success") {
+                            
                             clearInterval(interval); // ✅ Stop polling
                             localStorage.setItem("paymentInitiated", "false"); // ❌ Don't poll again
                             //document.getElementById('result').innerHTML += "<p style='color:green;'>✅ Payment Confirmed!</p>";
@@ -185,7 +188,7 @@ window.onload = function() {
      console.log("data received");
      console.log("status:",shouldCheckPayment);
      console.log("linkid:",linkId);
-    if (shouldCheckPayment === "true" && linkId) {
+    if (shouldCheckPayment === "true" && linkId && linkId !== 'undefined') {
         console.log("entered in if block...");
         startPollingForPayment(linkId); // ✅ Start polling
     }
