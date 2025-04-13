@@ -132,6 +132,9 @@
                     const resultDiv = document.getElementById('result');
                     if (data.link_url) {
                         currentLinkId = data.link_id;
+                                                // ✅ Save link ID and flag to localStorage here
+                        localStorage.setItem("currentLinkId", currentLinkId);
+                        localStorage.setItem("paymentInitiated", "true");
                         resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
                         startPollingForPayment(currentLinkId);
                     } else {
