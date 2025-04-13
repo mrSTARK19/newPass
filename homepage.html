@@ -114,7 +114,7 @@
     </div>
 
     <script>
-
+/*
 function verifyAndSave() {
             const correctPassword = "1234"; // Default password
             const enteredPassword = document.getElementById('password').value;
@@ -178,12 +178,12 @@ function verifyAndSave() {
             }, 3000); // every 3 seconds
         }
 
-        
+     */   
 
 window.onload = function() {
     resetDailyCheckin(); // Reset check-in data if it's a new day
 
-    const shouldCheckPayment = localStorage.getItem("paymentInitiated");
+  /*  const shouldCheckPayment = localStorage.getItem("paymentInitiated");
     const linkId = localStorage.getItem("currentLinkId");
      console.log("data received");
      console.log("status:",shouldCheckPayment);
@@ -192,7 +192,7 @@ window.onload = function() {
         console.log("entered in if block...");
         startPollingForPayment(linkId); // ✅ Start polling
     }
-
+*/
     
     if (localStorage.getItem("scanStatus") === "true") {
  
