@@ -67,7 +67,8 @@
 
 
     <script>
-        window.onload = function () {
+        
+       /* window.onload = function () {
             // You can check query params for payment status if needed
             const urlParams = new URLSearchParams(window.location.search);
             const status = urlParams.get('status'); // if Cashfree adds one
@@ -77,6 +78,7 @@
                 verifyAndSave()
             }
         };
+        */
         let currentLinkId = null;
         const correctPassword = "1234"; // Default password
         const enteredPassword = document.getElementById('password').value;
