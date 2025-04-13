@@ -114,86 +114,9 @@
     </div>
 
     <script>
-/*
-function verifyAndSave() {
-            const correctPassword = "1234"; // Default password
-            const enteredPassword = document.getElementById('password').value;
-
-            //   if (enteredPassword === correctPassword) {
-            // Retrieve temp data
-            const name = localStorage.getItem('tempName');
-            const gender = localStorage.getItem('tempGender');
-            const route = localStorage.getItem('tempRoute');
-            const profile = localStorage.getItem('tempProfile');
-
-            if (!name || !gender || !route) {
-                alert("Error: Missing data! Please enter details again.");
-                return;
-            }
-
-            // Calculate expiry date (30 days from now)
-            const today = new Date();
-            const expiryDate = new Date(today.setDate(today.getDate() + 30)).toDateString();
-
-            // Save final data
-            const userData = { name, gender, route, expiryDate };
-            localStorage.setItem('userData', JSON.stringify(userData));
-            localStorage.setItem('profileImage', profile);
-
-            // Clear temporary data
-            localStorage.removeItem('tempName');
-            localStorage.removeItem('tempGender');
-            localStorage.removeItem('tempRoute');
-            localStorage.removeItem('tempProfile');
-
-            alert("Pass Verified and Saved! from home");
-            window.location.href = 'homepage.html'; // Redirect to main page
-            //    } else {
-            //  alert('Incorrect password!');
-            //   }
-        }
-
-
-
-        function startPollingForPayment(linkId) {
-            const interval = setInterval(() => {
-                fetch(`https://flaskserver-3c3s.onrender.com/check-payment/${linkId}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("Polling response data:", data);
-
-                        if (data.status === "success") {
-                            
-                            clearInterval(interval); // ✅ Stop polling
-                            localStorage.setItem("paymentInitiated", "false"); // ❌ Don't poll again
-                            //document.getElementById('result').innerHTML += "<p style='color:green;'>✅ Payment Confirmed!</p>";
-                            alert("hey!,Your payment is confirmed");
-                            console.log("called from poll");
-                            verifyAndSave(); // 🟢 Call this automatically
-                        }
-                    })
-                    .catch(err => {
-                        console.error("Polling error:", err);
-                    });
-            }, 3000); // every 3 seconds
-        }
-
-     */   
 
 window.onload = function() {
     resetDailyCheckin(); // Reset check-in data if it's a new day
-
-  /*  const shouldCheckPayment = localStorage.getItem("paymentInitiated");
-    const linkId = localStorage.getItem("currentLinkId");
-     console.log("data received");
-     console.log("status:",shouldCheckPayment);
-     console.log("linkid:",linkId);
-    if (shouldCheckPayment === "true" && linkId && linkId !== 'undefined') {
-        console.log("entered in if block...");
-        startPollingForPayment(linkId); // ✅ Start polling
-    }
-*/
-    
     if (localStorage.getItem("scanStatus") === "true") {
  
         changeColor();
