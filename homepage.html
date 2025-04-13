@@ -165,6 +165,7 @@ function verifyAndSave() {
                             localStorage.setItem("paymentInitiated", "false"); // ❌ Don't poll again
                             //document.getElementById('result').innerHTML += "<p style='color:green;'>✅ Payment Confirmed!</p>";
                             alert("hey!,Your payment is confirmed");
+                            console.log("called from poll");
                             verifyAndSave(); // 🟢 Call this automatically
                         }
                     })
@@ -181,7 +182,7 @@ window.onload = function() {
 
     const shouldCheckPayment = localStorage.getItem("paymentInitiated");
     const linkId = localStorage.getItem("currentLinkId");
-
+     console.log("data received");
     if (shouldCheckPayment === "true" && linkId) {
         startPollingForPayment(linkId); // ✅ Start polling
     }
