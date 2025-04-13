@@ -110,6 +110,7 @@
                     });
             }, 5000); // every 5 seconds
         }
+        //  startPollingForPayment(currentLinkId);
 */
 
         function link() {
@@ -136,7 +137,7 @@
                         localStorage.setItem("currentLinkId", currentLinkId);
                         localStorage.setItem("paymentInitiated", "true");
                        resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
-                      //  startPollingForPayment(currentLinkId);
+                      
                     } else {
                         resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error || 'Something went wrong'}</p>`;
                     }
