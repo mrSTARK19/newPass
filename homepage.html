@@ -183,7 +183,10 @@ window.onload = function() {
     const shouldCheckPayment = localStorage.getItem("paymentInitiated");
     const linkId = localStorage.getItem("currentLinkId");
      console.log("data received");
+     console.log("status:",shouldCheckPayment);
+     console.log("linkid:",linkId);
     if (shouldCheckPayment === "true" && linkId) {
+        console.log("entered in if block...");
         startPollingForPayment(linkId); // ✅ Start polling
     }
 
