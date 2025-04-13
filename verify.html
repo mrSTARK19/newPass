@@ -138,6 +138,7 @@
                                                 // ✅ Save link ID and flag to localStorage here
                         localStorage.setItem("currentLinkId", currentLinkId);
                         localStorage.setItem("paymentInitiated", "true");
+                        console.log("datastored in localstorage");
                        resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
                       
                     } else {
@@ -182,7 +183,7 @@
             localStorage.removeItem('tempRoute');
             localStorage.removeItem('tempProfile');
 
-            alert("Pass Verified and Saved!");
+            alert("Pass Verified and Saved! from verify");
             window.location.href = 'homepage.html'; // Redirect to main page
             //    } else {
             //  alert('Incorrect password!');
