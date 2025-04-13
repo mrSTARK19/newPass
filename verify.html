@@ -96,7 +96,7 @@
             }
         }
 
- /*           function startPollingForPayment(linkId) {
+            function startPollingForPayment(linkId) {
             const interval = setInterval(() => {
                 fetch(`https://flaskserver-3c3s.onrender.com/check-payment/${linkId}`)
                     .then(res => res.json())
@@ -113,7 +113,7 @@
             }, 5000); // every 5 seconds
         }
         //  startPollingForPayment(currentLinkId);
-*/
+
 
         function link() {
             const amount = localStorage.getItem('amount') ;
@@ -137,8 +137,8 @@
                         currentLinkId = data.link_id;
                                                 // ✅ Save link ID and flag to localStorage here
                         localStorage.setItem("currentLinkId", currentLinkId);
-                        localStorage.setItem("paymentInitiated", "true");
-                        console.log("datastored in localstorage");
+                    //    localStorage.setItem("paymentInitiated", "true");
+                      //  console.log("datastored in localstorage");
                        resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
                       
                     } else {
