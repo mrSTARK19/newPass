@@ -67,7 +67,6 @@
 
 
     <script>
-        
         window.onload = function () {
             // You can check query params for payment status if needed
             const urlParams = new URLSearchParams(window.location.search);
@@ -78,8 +77,7 @@
                 verifyAndSave()
             }
         };
-        
-        let currentLinkId = null;
+        currentLinkId = null;
         const correctPassword = "1234"; // Default password
         const enteredPassword = document.getElementById('password').value;
 
@@ -96,27 +94,29 @@
             }
         }
 
-            function startPollingForPayment(linkId) {
+
+        function startPollingForPayment(linkId) {
             const interval = setInterval(() => {
                 fetch(`https://flaskserver-3c3s.onrender.com/check-payment/${linkId}`)
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === "success") {
-                            clearInterval(interval); // ✅ stop polling
-                            document.getElementById('result').innerHTML += "<p style='color:green;'>✅ Payment Confirmed!</p>";
+                            clearInterval(interval); // ✅ Stop polling
+                            localStorage.setItem("paymentInitiated", "false"); // ❌ Don't poll again
+                            //document.getElementById('result').innerHTML += "<p style='color:green;'>✅ Payment Confirmed!</p>";
+                            alert("hey!,Your payment is confirmed");
                             verifyAndSave(); // 🟢 Call this automatically
                         }
                     })
                     .catch(err => {
                         console.error("Polling error:", err);
                     });
-            }, 5000); // every 5 seconds
+            }, 3000); // every 3 seconds
         }
-        //  startPollingForPayment(currentLinkId);
 
 
         function link() {
-            const amount = localStorage.getItem('amount') ;
+            const amount = localStorage.getItem('amount');
 
             if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
                 alert("Please enter a valid amount.");
@@ -135,13 +135,13 @@
                     const resultDiv = document.getElementById('result');
                     if (data.link_url) {
                         currentLinkId = data.link_id;
+                        // ✅ Save link ID and flag to localStorage here
+                        localStorage.setItem("currentLinkId", currentLinkId);
+                        localStorage.setItem("paymentInitiated", "true");
+
+                        resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
+
                         startPollingForPayment(currentLinkId);
-                                                // ✅ Save link ID and flag to localStorage here
-                      //  localStorage.setItem("currentLinkId", currentLinkId);
-                    //    localStorage.setItem("paymentInitiated", "true");
-                      //  console.log("datastored in localstorage");
-                       resultDiv.innerHTML = `<p>✅ <a href="${data.link_url}" target="_blank">Click to Pay</a></p>`;
-                      
                     } else {
                         resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error || 'Something went wrong'}</p>`;
                     }
@@ -149,6 +149,7 @@
                 .catch(err => {
                     console.error("Error:", err);
                     document.getElementById('result').innerHTML = `<p style="color:red;">❌ Error generating link</p>`;
+
                 });
         }
 
@@ -184,7 +185,7 @@
             localStorage.removeItem('tempRoute');
             localStorage.removeItem('tempProfile');
 
-            alert("Pass Verified and Saved! from verify");
+            alert("Pass Verified and Saved!");
             window.location.href = 'homepage.html'; // Redirect to main page
             //    } else {
             //  alert('Incorrect password!');
