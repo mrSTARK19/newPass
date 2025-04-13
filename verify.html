@@ -71,7 +71,7 @@
             // You can check query params for payment status if needed
             const urlParams = new URLSearchParams(window.location.search);
             const status = urlParams.get('status'); // if Cashfree adds one
-
+             console.log("loaded with onload");
             // Run your custom function here
             if (status === "SUCCESS") {
                 verifyAndSave()
