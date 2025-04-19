@@ -1,107 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-        .scanner-container {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+    .scanner-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
 
-        #reader {
-            width: 70%;
-            height: 70%;
-        }
+    #reader {
+      width: 70%;
+      height: 70%;
+    }
 
-        .scan-btn {
-            margin-top: 20px;
-            padding: 12px 20px;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            background: #007BFF;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    .scan-btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-        .scan-btn:hover {
-            background: #0056b3;
-        }
+    .scan-btn:hover {
+      background: #0056b3;
+    }
 
-        #result {
-            margin-top: 15px;
-            font-size: 18px;
-            color: #007BFF;
-            font-weight: bold;
-        }
-    </style>
+    #result {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #007BFF;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="scanner-container">
-        <div id="reader"></div>
-    </div>
+  <div class="scanner-container">
+    <div id="reader"></div>
+  </div>
 
-    <button class="scan-btn" onclick="startScanning()">Start Scanning</button>
-    <p id="result"></p>
+  <button class="scan-btn" onclick="startScanning()">Start Scanning</button>
+  <p id="result"></p>
 
-    <script>
-        let qrScanner;
-        let text = "DevelopedByMe"
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
 
-        function startScanning() {
-            if (!qrScanner) {
-                qrScanner = new Html5Qrcode("reader");
-                qrScanner.start(
-                    { facingMode: "environment" }, // Prefer back camera
-                    { fps: 10, qrbox: 300 },// 2nd commit 
-                    onScanSuccess,
-                    onScanFailure
-                ).catch(err => console.error("Camera access error:", err));
-            }
+    const firebaseConfig = {
+      apiKey: "AIzaSyBmdX7sgoYjdP4ECy9FjlA5EJB5yEkrmeE",
+      authDomain: "databaseapi-f62ba.firebaseapp.com",
+      databaseURL: "https://databaseapi-f62ba-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "databaseapi-f62ba",
+      storageBucket: "databaseapi-f62ba.appspot.com",
+      messagingSenderId: "793013913264",
+      appId: "1:793013913264:web:f320fb89f2259d85b0dd75"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let qrScanner;
+
+    function startScanning() {
+      if (!qrScanner) {
+        qrScanner = new Html5Qrcode("reader");
+      }
+
+      qrScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 200 },
+        (decodedText, decodedResult) => {
+          // ✅ Filter only QR codes that start with "Me"
+          if (!decodedText.startsWith("Me")) {
+            document.getElementById("result").innerText = "Invalid QR Code";
+            document.getElementById("result").style.color = "red";
+            return;
+          }
+
+          document.getElementById("result").innerText = "Verified: " + decodedText;
+          document.getElementById("result").style.color = "green";
+          localStorage.setItem("scanStatus","true");
+
+          const scanData = {
+            message: localStorage.getItem("userData") || "No local data",
+            timestamp: new Date().toISOString()
+          };
+
+          const pathRef = ref(db, decodedText); // decodedText like "Me123"
+          push(pathRef, scanData);
+
+          qrScanner.stop();
+        },
+        (error) => {
+          console.warn("Scan failed", error);
         }
+      );
+    }
 
-        function onScanSuccess(decodedText, decodedResult) {
-             let scannedText = decodedText.trim().toLowerCase();
-            let expectedText = text.toLowerCase();
-            console.log("Scanned text:", scannedText); // Debugging output
-            
-            document.getElementById("result").innerHTML = "Verified !";
-            document.getElementById("result").style.color = "green";
-           if (decodedText===text){
-              localStorage.setItem("scanStatus","true")
-           }
-            qrScanner.stop(); // Stop scanning after successful scan
-        }
-
-        function onScanFailure(error) {
-            console.warn(`QR Code scan failed: ${error}`);
-        }
-    </script>
+    window.startScanning = startScanning;
+  </script>
 
 </body>
 </html>
