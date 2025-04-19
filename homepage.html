@@ -201,7 +201,7 @@ function changeColor() {
                     <p><strong>Name:</strong> ${passData.name}</p>
                     <p><strong>Path:</strong> ${passData.route}</p>
                     <p><strong>Gender:</strong> ${passData.gender}</p>
-                    <p><strong>Last Date:</strong> ${passData.expiryDate}</p>
+                    <p style="color: red; text-decoration: underline;"><strong>Last Date:</strong> ${passData.expiryDate}</p>
                 `;
                 document.getElementById('profileImage').src =
                     localStorage.getItem('profileImage') || 'assets/default-profile.jpg';
