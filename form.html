@@ -99,6 +99,17 @@
                 submitButton.style.cursor = "not-allowed";
                 alert("Pass already exists! Delete it before submitting a new one.");
             }
+                        // Create and insert the Pay button
+            const payButton = document.createElement("button");
+            payButton.textContent = "Click to Pay!";
+            payButton.style.background = "#28a745"; // Green color
+            payButton.style.marginTop = "10px";
+            payButton.onclick = function () {
+                window.location.href = "verify.html";
+            };
+
+            // Append Pay button after the submit button
+            submitButton.parentNode.appendChild(payButton);
         });
 
 
