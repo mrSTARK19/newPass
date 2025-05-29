@@ -108,6 +108,10 @@
           document.getElementById("result").style.color = "green";
           localStorage.setItem("scanStatus","true");
 
+          if (navigator.vibrate) {
+            navigator.vibrate(200);
+                                 }
+
           const scanData = {
             message: localStorage.getItem("userData") || "No local data",
             timestamp: new Date().toISOString()
@@ -115,8 +119,9 @@
 
           const pathRef = ref(db, decodedText); // decodedText like "Me123"
           push(pathRef, scanData);
-
+          
           qrScanner.stop();
+          window.location.href = "homepage.html"
         },
         (error) => {
           console.warn("Scan failed", error);
